@@ -1,0 +1,71 @@
+:root {
+  --text: var(--tg-theme-text-color, #101216);
+  --text-h: var(--tg-theme-text-color, #080a0f);
+  --hint: var(--tg-theme-hint-color, #667085);
+  --bg: var(--tg-theme-bg-color, #f3f5f8);
+  --app-bg: var(--tg-theme-bg-color, #f3f5f8);
+  --panel-bg: var(--tg-theme-secondary-bg-color, #fff);
+  --border: #e5e4e7;
+  --accent-text: var(--tg-theme-accent-text-color, #168acd);
+  --accent-bg: rgba(22, 138, 205, 0.11);
+  --button: var(--tg-theme-button-color, #2481cc);
+  --button-text: var(--tg-theme-button-text-color, #fff);
+  --button-bg: var(--tg-theme-secondary-bg-color, #fff);
+  --success-text: #057a55;
+  --success-bg: rgba(5, 122, 85, 0.08);
+  --success-border: rgba(5, 122, 85, 0.24);
+
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
+
+  font: 16px/145% var(--sans);
+  letter-spacing: 0;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --border: #2f333c;
+    --success-text: #3dd68c;
+    --success-bg: rgba(61, 214, 140, 0.1);
+    --success-border: rgba(61, 214, 140, 0.26);
+  }
+}
+
+#root {
+  min-height: 100svh;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 650;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 30px;
+  margin: 0;
+}
+h2 {
+  font-size: 20px;
+  line-height: 1.2;
+  margin: 0;
+}
+p {
+  margin: 0;
+}
