@@ -18,80 +18,114 @@ export const ExpensesScreen = ({
   onAddExpense,
   onRemoveExpense,
   onUpdateDraft,
-}: ExpensesScreenProps) => (
-  <section className="flow-screen">
-    <div className="message message--bot">
-      <span>{t(locale, "navExpenses")}</span>
-      <strong>{t(locale, "expenses")}</strong>
-      <p>{t(locale, "monthlyReportHint")}</p>
-    </div>
+}: ExpensesScreenProps) => {
+  const totalExpenses = finance.expenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
+  const canAddExpense = Number(expenseDraft.amount) > 0;
 
-    <div className="panel">
-      <div className="two-fields">
-        <label className="field">
-          <span>{t(locale, "amount")}</span>
-          <input
-            inputMode="decimal"
-            onChange={(event) => onUpdateDraft({ amount: event.target.value })}
-            placeholder="850"
-            type="number"
-            value={expenseDraft.amount}
-          />
-        </label>
-        <label className="field">
-          <span>{t(locale, "date")}</span>
-          <input
-            onChange={(event) => onUpdateDraft({ date: event.target.value })}
-            type="date"
-            value={expenseDraft.date}
-          />
-        </label>
+  return (
+    <section className="flow-screen">
+      <div className="section-intro">
+        <span>{t(locale, "navExpenses")}</span>
+        <h2>{t(locale, "expenses")}</h2>
+        <p>{t(locale, "monthlyReportHint")}</p>
       </div>
-      <label className="field">
-        <span>{t(locale, "category")}</span>
-        <select
-          onChange={(event) => onUpdateDraft({ category: event.target.value })}
-          value={expenseDraft.category}
-        >
-          {categories.map((category) => (
-            <option key={category} value={category}>
-              {categoryLabel(locale, category)}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="field">
-        <span>{t(locale, "comment")}</span>
-        <input
-          onChange={(event) => onUpdateDraft({ note: event.target.value })}
-          placeholder="Кофе, аренда, подписка..."
-          value={expenseDraft.note}
-        />
-      </label>
-      <button className="primary-action" onClick={onAddExpense} type="button">
-        {t(locale, "addExpense")}
-      </button>
-    </div>
 
-    <div className="list-panel">
-      {finance.expenses.map((expense) => (
-        <div className="expense-row" key={expense.id}>
-          <div>
-            <strong>{expense.note}</strong>
-            <span>
-              {categoryLabel(locale, expense.category)} · {expense.date}
-            </span>
-          </div>
-          <b>{formatMoney(expense.amount)}</b>
-          <button
-            aria-label="Удалить расход"
-            onClick={() => onRemoveExpense(expense.id)}
-            type="button"
-          >
-            ×
-          </button>
+      <div className="panel form-panel">
+        <div className="two-fields">
+          <label className="field">
+            <span>{t(locale, "amount")}</span>
+            <input
+              inputMode="decimal"
+              onChange={(event) =>
+                onUpdateDraft({ amount: event.target.value })
+              }
+              placeholder="850"
+              type="number"
+              value={expenseDraft.amount}
+            />
+          </label>
+          <label className="field">
+            <span>{t(locale, "date")}</span>
+            <input
+              onChange={(event) => onUpdateDraft({ date: event.target.value })}
+              type="date"
+              value={expenseDraft.date}
+            />
+          </label>
         </div>
-      ))}
-    </div>
-  </section>
-);
+        <label className="field">
+          <span>{t(locale, "category")}</span>
+          <select
+            onChange={(event) =>
+              onUpdateDraft({ category: event.target.value })
+            }
+            value={expenseDraft.category}
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {categoryLabel(locale, category)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          <span>{t(locale, "comment")}</span>
+          <input
+            onChange={(event) => onUpdateDraft({ note: event.target.value })}
+            placeholder="Кофе, аренда, подписка..."
+            value={expenseDraft.note}
+          />
+        </label>
+        <button
+          className="primary-action"
+          disabled={!canAddExpense}
+          onClick={onAddExpense}
+          type="button"
+        >
+          {t(locale, "addExpense")}
+        </button>
+      </div>
+
+      <div className="panel records-panel">
+        <div className="panel-head">
+          <div>
+            <strong>{t(locale, "recentExpenses")}</strong>
+            <span>{formatMoney(totalExpenses)}</span>
+          </div>
+        </div>
+
+        {finance.expenses.length > 0 ? (
+          <div className="records-list">
+            {finance.expenses.map((expense) => (
+              <div className="expense-row" key={expense.id}>
+                <div>
+                  <strong>{expense.note}</strong>
+                  <span>
+                    {categoryLabel(locale, expense.category)} · {expense.date}
+                  </span>
+                </div>
+                <b>{formatMoney(expense.amount)}</b>
+                <button
+                  aria-label="Удалить расход"
+                  className="remove-button"
+                  onClick={() => onRemoveExpense(expense.id)}
+                  type="button"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state">
+            <strong>{t(locale, "noExpensesTitle")}</strong>
+            <span>{t(locale, "noExpensesHint")}</span>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+};

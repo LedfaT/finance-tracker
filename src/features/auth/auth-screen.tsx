@@ -46,14 +46,14 @@ export const AuthScreen = ({
   });
 
   return (
-    <section className="chat-thread" aria-live="polite">
-      <div className="message message--bot">
+    <section className="flow-screen auth-screen" aria-live="polite">
+      <div className="section-intro">
         <span>{t(locale, "navAuth")}</span>
-        <strong>{title}</strong>
+        <h2>{title}</h2>
         <p>{t(locale, "authDescription")}</p>
       </div>
 
-      <div className="panel">
+      <div className="panel auth-card">
         <div className="user-row">
           <UserAvatar initials={initials} user={user} />
           <div>
@@ -74,25 +74,27 @@ export const AuthScreen = ({
           </div>
         </div>
 
-        <button
-          className="primary-action"
-          disabled={isBusy}
-          onClick={onContinue}
-          type="button"
-        >
-          {primaryActionLabel}
-        </button>
-
-        {!isTelegram && botLink ? (
-          <a
-            className="secondary-action"
-            href={botLink}
-            rel="noreferrer"
-            target="_blank"
+        <div className="auth-actions">
+          <button
+            className="primary-action"
+            disabled={isBusy}
+            onClick={onContinue}
+            type="button"
           >
-            {t(locale, "authOpenBot")}
-          </a>
-        ) : null}
+            {primaryActionLabel}
+          </button>
+
+          {!isTelegram && botLink ? (
+            <a
+              className="secondary-action"
+              href={botLink}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {t(locale, "authOpenBot")}
+            </a>
+          ) : null}
+        </div>
       </div>
     </section>
   );

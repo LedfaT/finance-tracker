@@ -20,14 +20,14 @@ export const TaxesScreen = ({
   taxAmount,
 }: TaxesScreenProps) => (
   <section className="flow-screen">
-    <div className="message message--bot">
+    <div className="section-intro">
       <span>{t(locale, "navTaxes")}</span>
-      <strong>{t(locale, "taxMode")}</strong>
+      <h2>{t(locale, "taxMode")}</h2>
       <p>{t(locale, "taxHint")}</p>
     </div>
 
-    <div className="panel">
-      <div className="segmented">
+    <div className="panel form-panel">
+      <fieldset className="segmented" aria-label={t(locale, "taxMode")}>
         {taxPresets.map((preset) => (
           <button
             data-active={finance.taxMode === preset.id}
@@ -38,7 +38,7 @@ export const TaxesScreen = ({
             {t(locale, preset.id)}
           </button>
         ))}
-      </div>
+      </fieldset>
       <div className="two-fields">
         <label className="field">
           <span>%</span>

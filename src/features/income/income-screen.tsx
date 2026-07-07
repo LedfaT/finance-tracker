@@ -20,14 +20,14 @@ export const IncomeScreen = ({
   taxAmount,
 }: IncomeScreenProps) => (
   <section className="flow-screen">
-    <div className="message message--bot">
+    <div className="section-intro">
       <span>{t(locale, "navIncome")}</span>
-      <strong>{t(locale, "income")}</strong>
+      <h2>{t(locale, "income")}</h2>
       <p>{t(locale, "incomeHint")}</p>
     </div>
 
-    <div className="panel">
-      <label className="field">
+    <div className="panel form-panel">
+      <label className="field field--large">
         <span>{t(locale, "income")}</span>
         <input
           inputMode="numeric"

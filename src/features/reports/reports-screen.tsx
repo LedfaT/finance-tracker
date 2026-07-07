@@ -29,81 +29,115 @@ export const ReportsScreen = ({
   settings,
   taxAmount,
   totalExpenses,
-}: ReportsScreenProps) => (
-  <section className="flow-screen">
-    <div className="report-hero">
-      <span>{t(locale, "reportMonth")}</span>
-      <strong>{formatMoney(balance)}</strong>
-      <p>{t(locale, "balanceCaption")}</p>
-    </div>
+}: ReportsScreenProps) => {
+  const maxChartValue = Math.max(
+    ...monthlyChart.flatMap((month) => [month.income, month.expenses]),
+    1
+  );
+  const maxCategoryAmount = Math.max(
+    ...categorySummary.map((item) => item.amount),
+    1
+  );
+  const getChartHeight = (value: number) =>
+    `${Math.max(8, Math.round((value / maxChartValue) * 104))}px`;
 
-    <div className="summary-grid">
-      <div>
-        <span>{t(locale, "income")}</span>
-        <strong>{formatMoney(income)}</strong>
+  return (
+    <section className="flow-screen">
+      <div className="report-hero">
+        <span>{t(locale, "reportMonth")}</span>
+        <strong>{formatMoney(balance)}</strong>
+        <p>{t(locale, "balanceCaption")}</p>
       </div>
-      <div>
-        <span>{t(locale, "taxes")}</span>
-        <strong>{formatMoney(taxAmount)}</strong>
-      </div>
-      <div>
-        <span>{t(locale, "expenses")}</span>
-        <strong>{formatMoney(totalExpenses)}</strong>
-      </div>
-    </div>
 
-    <div className="panel">
-      <div className="setting-row">
+      <div className="summary-grid report-summary">
         <div>
-          <strong>{t(locale, "monthlyReport")}</strong>
-          <span>{t(locale, "monthlyReportHint")}</span>
+          <span>{t(locale, "income")}</span>
+          <strong>{formatMoney(income)}</strong>
         </div>
-        <label className="switch" aria-label={t(locale, "monthlyReport")}>
-          <input
-            checked={settings.monthlyReportEnabled}
-            onChange={(event) =>
-              onSettingsChange({ monthlyReportEnabled: event.target.checked })
-            }
-            type="checkbox"
-          />
-          <span />
-        </label>
+        <div>
+          <span>{t(locale, "taxes")}</span>
+          <strong>{formatMoney(taxAmount)}</strong>
+        </div>
+        <div>
+          <span>{t(locale, "expenses")}</span>
+          <strong>{formatMoney(totalExpenses)}</strong>
+        </div>
       </div>
-    </div>
 
-    <div className="panel">
-      <div className="panel-head">
-        <strong>{t(locale, "monthlyComparison")}</strong>
-        <span>
-          {t(locale, "income")} / {t(locale, "expenses")}
-        </span>
-      </div>
-      <div className="bars" aria-label="Сравнение месяцев">
-        {monthlyChart.map((month) => (
-          <div className="bar-group" key={month.label}>
-            <div className="bar-pair">
-              <i
-                className="bar bar--income"
-                style={{ height: `${Math.max(8, month.income / 900)}px` }}
-              />
-              <i
-                className="bar bar--expense"
-                style={{ height: `${Math.max(8, month.expenses / 900)}px` }}
-              />
-            </div>
-            <span>{month.label}</span>
+      <div className="panel">
+        <div className="setting-row">
+          <div>
+            <strong>{t(locale, "monthlyReport")}</strong>
+            <span>{t(locale, "monthlyReportHint")}</span>
           </div>
-        ))}
-      </div>
-    </div>
-
-    <div className="list-panel">
-      {categorySummary.map((item) => (
-        <div className="category-row" key={item.category}>
-          <span>{categoryLabel(locale, item.category)}</span>
-          <strong>{formatMoney(item.amount)}</strong>
+          <label className="switch" aria-label={t(locale, "monthlyReport")}>
+            <input
+              checked={settings.monthlyReportEnabled}
+              onChange={(event) =>
+                onSettingsChange({ monthlyReportEnabled: event.target.checked })
+              }
+              type="checkbox"
+            />
+            <span />
+          </label>
         </div>
-      ))}
-    </div>
-  </section>
-);
+      </div>
+
+      <div className="panel chart-panel">
+        <div className="panel-head">
+          <div>
+            <strong>{t(locale, "monthlyComparison")}</strong>
+            <span>
+              {t(locale, "income")} / {t(locale, "expenses")}
+            </span>
+          </div>
+        </div>
+        <div className="bars" aria-label="Сравнение месяцев">
+          {monthlyChart.map((month) => (
+            <div className="bar-group" key={month.label}>
+              <div className="bar-pair">
+                <i
+                  className="bar bar--income"
+                  style={{ height: getChartHeight(month.income) }}
+                />
+                <i
+                  className="bar bar--expense"
+                  style={{ height: getChartHeight(month.expenses) }}
+                />
+              </div>
+              <span>{month.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="panel records-panel">
+        <div className="panel-head">
+          <div>
+            <strong>{t(locale, "categoryBreakdown")}</strong>
+            <span>{t(locale, "expenses")}</span>
+          </div>
+        </div>
+        <div className="records-list category-list">
+          {categorySummary.map((item) => (
+            <div className="category-row" key={item.category}>
+              <div>
+                <span>{categoryLabel(locale, item.category)}</span>
+                <div className="category-track" aria-hidden="true">
+                  <i
+                    style={{
+                      width: `${Math.round(
+                        (item.amount / maxCategoryAmount) * 100
+                      )}%`,
+                    }}
+                  />
+                </div>
+              </div>
+              <strong>{formatMoney(item.amount)}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
